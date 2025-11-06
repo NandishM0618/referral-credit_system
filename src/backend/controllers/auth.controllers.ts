@@ -40,6 +40,8 @@ export const registerUser = async (req: Request, res: Response) => {
             })
         }
 
+        const token = newUser.generateAuthToken();
+
         res.status(201).json({
             message: "User created Successfully", user: {
                 _id: newUser._id,
@@ -48,6 +50,7 @@ export const registerUser = async (req: Request, res: Response) => {
                 referralCode: newUser.referralCode,
                 referredBy: newUser.referredBy,
             },
+            token
         })
     } catch (error) {
         console.error(error);
