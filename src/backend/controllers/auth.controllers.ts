@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User, { IUser } from '../models/user.model'
 import mongoose from "mongoose";
+import Referral from "../models/referral.model";
 
 const generateReferralCode = (name: string): string => {
     return `${name.substring(0, 4).toUpperCase()}${Math.floor(1000 + Math.random() * 9000)}`
@@ -30,6 +31,14 @@ export const registerUser = async (req: Request, res: Response) => {
         const newUser = await User.create({
             name, email, password, referralCode: newReferralCode, referredBy: referredById,
         });
+
+        if (referredById) {
+            await Referral.create({
+                referrer: referredById,
+                referredUser: newUser._id,
+                status: "pending",
+            })
+        }
 
         res.status(201).json({
             message: "User created Successfully", user: {
