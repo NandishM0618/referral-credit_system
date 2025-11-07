@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 
 import authRoutes from './routes/auth.routes'
 import referralRoutes from './routes/referral.routes'
+import purchaseRoutes from './routes/purchase.routes'
 import connectDB from './config/db';
 
 const app = express();
@@ -20,6 +21,7 @@ connectDB();
 
 app.use("/api/auth", authRoutes);
 app.use("/api/referral", referralRoutes)
+app.use("/api/purchase", purchaseRoutes)
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello from TypeScript + Express backend!');

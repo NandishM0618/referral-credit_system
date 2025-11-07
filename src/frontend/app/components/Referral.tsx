@@ -253,13 +253,13 @@ export default function Referral() {
                                     <div>
                                         <h2 className="text-sm font-medium text-gray-500">Account Status</h2>
                                         <p
-                                            className={`text-lg flex items-center gap-2 font-semibold ${selectedUser.status === "Converted" ? "text-green-600" : "text-yellow-600"
+                                            className={`text-lg flex items-center gap-2 font-semibold ${selectedUser.status === "converted" ? "text-green-600" : "text-yellow-600"
                                                 }`}
                                         >
-                                            {selectedUser.status === "Converted"
+                                            {selectedUser.status === "converted"
                                                 ? "Successfully Verified"
                                                 : selectedUser.status}
-                                            {selectedUser.status === "Converted" && <Verified />}
+                                            {selectedUser.status === "converted" && <Verified />}
                                         </p>
                                     </div>
 
