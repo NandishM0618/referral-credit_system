@@ -202,16 +202,20 @@ export default function Referral() {
                                                     <td className="p-3">{user.name}</td>
                                                     <td className="p-3">{user.email}</td>
                                                     <td className="p-3">{user.joinDate}</td>
-                                                    <td
-                                                        className={`p-3 font-medium ${user.status === "Converted"
-                                                            ? "text-green-600"
-                                                            : user.status === "Pending"
-                                                                ? "text-yellow-600"
-                                                                : "text-gray-500"
-                                                            }`}
-                                                    >
-                                                        {user.status}
+                                                    <td className="p-3 rounded-md font-medium text-left">
+                                                        <span
+                                                            className={`inline-flex px-3 py-1 rounded-full text-sm font-semibold capitalize
+                                                                        ${user.status === "converted"
+                                                                    ? "bg-green-100 text-green-700 border border-green-200"
+                                                                    : user.status === "pending"
+                                                                        ? "bg-yellow-100 text-yellow-700 border border-yellow-200"
+                                                                        : "bg-gray-100 text-gray-600 border border-gray-200"
+                                                                }`}
+                                                        >
+                                                            {user.status}
+                                                        </span>
                                                     </td>
+
                                                 </tr>
                                             ))}
                                         </tbody>

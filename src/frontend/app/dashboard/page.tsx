@@ -1,51 +1,70 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { useUserStore } from "../store/userStore";
-import { useRouter } from "next/navigation";
-import API from "@/services/apiService";
 import SideBar from "../components/Sidebar";
 import Referral from "../components/Referral";
+import socket from "../lib/socket";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Dashboard() {
-    const [data, setData] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
+    const [notification, setNotification] = useState<string | null>(null);
 
-    const { token, logout } = useUserStore();
+    const { user } = useUserStore();
 
     useEffect(() => {
-        if (!token) {
-            router.replace("/login");
-            return;
-        }
+        if (!user?.id) return;
 
-        const fetchStats = async () => {
-            try {
-                const res = await API.get("/referral/dashboard", {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                setData(res.data);
-            } catch (error: any) {
-                console.error("Dashboard fetch failed:", error);
-                if (error.response?.status === 401) {
-                    logout();
-                    router.replace("/login");
-                }
-            } finally {
-                setLoading(false);
-            }
+        const handleConnect = () => {
+            console.log("Socket connected:", socket.id);
+            socket.emit("register", user.id);
+            console.log("Sent register event for user:", user.id);
         };
 
-        fetchStats();
-    }, [token, router, logout]);
+        socket.on("connect", handleConnect);
 
-    if (loading) return <p>Loading...</p>;
+        socket.on("referrer-notification", (data) => {
+            setNotification(data.message);
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 3000);
+        });
+
+        return () => {
+            socket.off("connect", handleConnect);
+            socket.off("referrer-notification");
+        };
+    }, [user]);
 
     return (
         <div className="flex">
             <SideBar />
             <Referral />
+            <AnimatePresence>
+                {notification && (
+                    <motion.div
+                        key="notification"
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 50 }}
+                        transition={{ duration: 0.4 }}
+                        className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.8, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="bg-white rounded-2xl shadow-lg p-6 text-center w-[350px]"
+                        >
+                            <h2 className="text-xl font-semibold text-green-600 mb-2">
+                                🎉 New Notification
+                            </h2>
+                            <p className="text-gray-700 mb-4">{notification}</p>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

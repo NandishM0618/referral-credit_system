@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User from "../models/user.model";
 import Purchase from "../models/purchase.model";
 import Referral from "../models/referral.model";
+import { io, onlineUsers } from "../index";
 
 export const makePurchase = async (req: Request, res: Response) => {
     try {
@@ -40,6 +41,15 @@ export const makePurchase = async (req: Request, res: Response) => {
 
                     updatedUserCredits = referredUser.credits;
                     referrerCredits = referrer.credits;
+
+                    const referrerSocket = onlineUsers.get(referral.referrer.toString());
+                    if (referrerSocket) {
+                        io.to(referrerSocket).emit("referrer-notification", {
+                            title: "Credits Earned 🎉",
+                            message: `${referredUser.name || "Your referral"} just made their first purchase! You earned 2 credits.`,
+                            credits: referrer.credits,
+                        });
+                    }
                 }
             }
         } else {

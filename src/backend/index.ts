@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv'
 import cors from 'cors'
 import bodyParser from 'body-parser';
+import http from 'http'
+import { Server } from 'socket.io'
 
 import authRoutes from './routes/auth.routes'
 import referralRoutes from './routes/referral.routes'
@@ -9,6 +11,12 @@ import purchaseRoutes from './routes/purchase.routes'
 import connectDB from './config/db';
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+    }
+})
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -19,6 +27,27 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 connectDB();
 
+const onlineUsers = new Map<string, string>();
+
+io.on("connection", (socket) => {
+    console.log("User connected", socket.id);
+
+    socket.on("register", (userId: string) => {
+        console.log(`✅ Registered user ${userId} -> ${socket.id}`);
+        onlineUsers.set(userId, socket.id);
+    });
+
+    socket.on("disconnect", () => {
+        for (const [userId, id] of onlineUsers.entries()) {
+            if (id === socket.id) {
+                onlineUsers.delete(userId);
+                break;
+            }
+        }
+    });
+});
+
+
 app.use("/api/auth", authRoutes);
 app.use("/api/referral", referralRoutes)
 app.use("/api/purchase", purchaseRoutes)
@@ -27,6 +56,8 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Hello from TypeScript + Express backend!');
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+server.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`)
+})
+
+export { io, onlineUsers }
