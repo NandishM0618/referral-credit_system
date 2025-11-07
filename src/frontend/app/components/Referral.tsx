@@ -74,190 +74,203 @@ export default function Referral() {
     }, []);
 
     return (
-        <div className="relative flex-1 min-h-screen p-5">
-            <div className="grid grid-cols-1 mx-auto lg:grid-cols-2 gap-8">
-                {/* Left Column - Referral Info */}
-                <div className=" p-3">
-                    <h2 className="text-2xl font-semibold mb-1">Referrals</h2>
-                    <p className="text-[16px] font-light text-gray-500 mb-4">Share your referrals code to your friends</p>
+        <div className="relative flex-1 min-h-screen p-8 bg-gradient-to-b from-[#0b0c1a] via-[#141832] to-[#1b1f3b] text-white">
+            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_20%,rgba(80,80,200,0.2),transparent_70%)]"></div>
+
+            <div className="absolute inset-0 bg-gradient-to-br from-[#060b23] via-[#0b0c2a] to-[#111] overflow-hidden">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
+            </div>
+
+            <div className="grid grid-cols-1 mx-auto lg:grid-cols-2 gap-10 relative z-10">
+
+                <div className="p-8 rounded-2xl bg-white/10 backdrop-blur-md shadow-lg border border-white/10 hover:shadow-blue-500/20 transition-all">
+                    <h2 className="text-3xl font-bold mb-1 text-blue-300">Referrals</h2>
+                    <p className="text-[16px] font-light text-gray-300 mb-6">
+                        Share your referral code and earn cosmic rewards
+                    </p>
+
                     <div className="flex items-center gap-4 mb-12">
                         <input
                             type="text"
-                            value={referralLink || "Loading your referral link..."}
+                            value={referralLink || "Generating your link..."}
                             readOnly
-                            className="flex-1 p-3 rounded-sm bg-gray-100 text-gray-400 focus:outline-none"
+                            className="flex-1 p-3 rounded-md bg-[#1b1f3b] text-gray-200 border border-blue-400/30 focus:outline-none"
                         />
                         <button
                             onClick={handleReferralLink}
                             disabled={!referralLink}
-                            className="px-4 py-2 bg-gray-500 flex gap-2 cursor-pointer hover:bg-black hover:text-white text-white rounded-md  transition"
+                            className="px-4 py-2 cursor-pointer bg-gradient-to-r from-blue-600 to-indigo-500 flex gap-2 items-center text-white font-semibold rounded-md hover:shadow-lg hover:scale-105 transition"
                         >
-                            <Files /> Copy Link
+                            <Files size={18} /> Copy
                         </button>
                     </div>
 
                     <AnimatePresence>
                         {showCopied && (
                             <motion.div
-                                initial={{ opacity: 0, y: 50, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: 30, scale: 0.95 }}
-                                transition={{ duration: 0.3, ease: "easeOut" }}
-                                className="fixed bottom-6 flex items-center bg-black text-white text-sm px-5 py-3 rounded-md shadow-lg"
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 20 }}
+                                transition={{ duration: 0.3 }}
+                                className="fixed bottom-6 flex items-center bg-blue-600 text-white text-sm px-6 py-3 rounded-lg shadow-lg"
                             >
-                                ✅ Referral link copied to clipboard!
+                                🌟 Referral link copied to clipboard!
                             </motion.div>
                         )}
                     </AnimatePresence>
 
                     <div className="relative my-10 text-center">
-                        <span className="bg-gray-50 px-3 text-gray-400 text-sm">or</span>
-                        <hr className="absolute left-0 top-1/2 w-full border-gray-200 -z-10" />
+                        <span className="bg-transparent px-3 text-gray-400 text-sm">or</span>
+                        <hr className="absolute left-0 top-1/2 w-full border-gray-600/30 -z-10" />
                     </div>
 
-                    <div className="">
-                        <h2 className="text-lg font-semibold mb-6">invite your friends</h2>
-                        <div className="flex items-center gap-4 mb-12">
-                            <input
-                                type="text"
-                                value={referralLink || "Loading your referral link..."}
-                                readOnly
-                                className="flex-1 p-3 rounded-md bg-gray-100 text-gray-600 focus:outline-none border border-gray-200"
-                            />
-                            <button
-                                onClick={handleReferralLink}
-                                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 flex items-center gap-2 text-white rounded-md transition"
+                    <h2 className="text-lg font-semibold mb-6 text-blue-200">
+                        Invite your friends
+                    </h2>
+                    <div className="flex items-center gap-4 mb-12">
+                        <input
+                            type="text"
+                            value={referralLink || ""}
+                            readOnly
+                            className="flex-1 p-3 rounded-md bg-[#1b1f3b] text-gray-200 border border-blue-400/30 focus:outline-none"
+                        />
+                        <button
+                            onClick={handleReferralLink}
+                            className="px-4 py-2 cursor-pointer bg-gradient-to-r from-indigo-500 to-blue-600 flex items-center gap-2 text-white rounded-md font-semibold hover:shadow-lg hover:scale-105 transition"
+                        >
+                            <Share2 size={18} /> Share
+                        </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-1">
+                        {[
+                            {
+                                title: "Total Credits",
+                                icon: <Star size={34} />,
+                                value: data?.totalCredits,
+                                desc: "Earned through referrals",
+                            },
+                            {
+                                title: "Referred Users",
+                                icon: <Users size={34} />,
+                                value: data?.referredUsers,
+                                desc: "People you’ve invited",
+                            },
+                            {
+                                title: "Converted Users",
+                                icon: <CheckCircle size={34} />,
+                                value: data?.convertedUsers,
+                                desc: "Users who completed signup",
+                            },
+                        ].map((card, i) => (
+                            <motion.div
+                                key={i}
+                                whileHover={{ scale: 1.03, boxShadow: "0px 0px 20px rgba(59,130,246,0.4)" }}
+                                className={`${i === 2 ? "md:col-span-2" : ""
+                                    } bg-white/10 border border-blue-400/20 rounded-xl p-5 flex flex-col justify-center items-start backdrop-blur-md`}
                             >
-                                <Share2 size={18} /> Share
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-1">
-
-                        <div className="bg-white border border-gray-100 rounded-md shadow-sm hover:shadow-md transition-all p-4 flex flex-col justify-center items-start">
-                            <div className="flex mx-auto items-center gap-1 mb-2">
-                                <div className="p-2 rounded-xl">
-                                    <Star size={34} />
+                                <div className="flex mx-auto items-center gap-2 mb-2 text-blue-300">
+                                    {card.icon}
+                                    <h3 className="text-lg font-semibold">{card.title}</h3>
                                 </div>
-                                <h3 className="text-lg font-semibold text-gray-700">Total Credits</h3>
-                            </div>
-                            <p className="text-5xl font-bold text-center mx-auto text-gray-800 leading-tight">{data?.totalCredits}</p>
-                            <p className="text-sm text-center mx-auto text-gray-400 mt-2">Earned through referrals</p>
-                        </div>
-
-                        <div className="bg-white border border-gray-100 rounded-md shadow-sm hover:shadow-md transition-all p-4 flex flex-col justify-center items-start">
-                            <div className="flex items-center mx-auto gap-1 mb-2">
-                                <div className="p-2 rounded-xl">
-                                    <Users size={34} />
-                                </div>
-                                <h3 className="text-lg font-semibold text-gray-700">Referred Users</h3>
-                            </div>
-                            <p className="text-5xl font-bold text-center mx-auto text-gray-800 leading-tight">{data?.referredUsers}</p>
-                            <p className="text-sm text-center mx-auto text-gray-400 mt-2">People you’ve invited</p>
-                        </div>
-
-                        <div className="bg-white border border-gray-100 rounded-md shadow-sm hover:shadow-md transition-all p-4 flex flex-col justify-center items-start md:col-span-2">
-                            <div className="flex mx-auto items-center gap-1 mb-2">
-                                <div className="p-2 rounded-xl">
-                                    <CheckCircle size={34} />
-                                </div>
-                                <h3 className="text-lg font-semibold text-gray-700">Converted Users</h3>
-                            </div>
-                            <p className="text-5xl font-bold mx-auto text-gray-800 leading-tight">{data?.convertedUsers}</p>
-                            <p className="text-sm mx-auto text-gray-400 mt-2">Users who completed signup</p>
-                        </div>
+                                <p className="text-5xl font-bold text-center mx-auto text-white leading-tight">
+                                    {card.value}
+                                </p>
+                                <p className="text-sm text-center mx-auto text-gray-400 mt-2">
+                                    {card.desc}
+                                </p>
+                            </motion.div>
+                        ))}
                     </div>
                 </div>
 
-                {/* Right Column - User List + Details */}
                 <div className="space-y-8">
-                    <div className="bg-white p-3">
-                        <h3 className="text-lg font-semibold mb-4">Referred Users</h3>
+                    <div className="bg-white/10 p-5 rounded-2xl backdrop-blur-md border border-white/10 hover:shadow-blue-500/20 transition-all">
+                        <h3 className="text-lg font-semibold mb-4 text-blue-200">Referred Users</h3>
+
                         <div className="overflow-x-auto">
                             {loading ? (
-                                <p className="text-gray-500 text-sm p-4">Loading referred users...</p>
+                                <p className="text-gray-400 text-sm p-4">Loading referred users...</p>
                             ) : users.length === 0 ? (
-                                <p className="text-gray-500 text-sm p-4">No referred users found.</p>
+                                <p className="text-gray-400 text-sm p-4">No referred users found.</p>
                             ) : (
-                                <div className="overflow-x-auto">
-                                    <table className="w-full text-sm text-left border-collapse">
-                                        <thead>
-                                            <tr className="bg-gray-50">
-                                                <th className="p-3">ID</th>
-                                                <th className="p-3">Name</th>
-                                                <th className="p-3">Email</th>
-                                                <th className="p-3">Join Date</th>
-                                                <th className="p-3">Status</th>
+                                <table className="w-full text-sm text-left border-collapse">
+                                    <thead>
+                                        <tr className="bg-blue-900/20 text-blue-200">
+                                            <th className="p-3">ID</th>
+                                            <th className="p-3">Name</th>
+                                            <th className="p-3">Email</th>
+                                            <th className="p-3">Join Date</th>
+                                            <th className="p-3">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {users.map((user) => (
+                                            <tr
+                                                onClick={() => setSelectedUser(user)}
+                                                key={user.id}
+                                                className="hover:bg-blue-900/10 cursor-pointer transition"
+                                            >
+                                                <td className="p-3 text-gray-200">
+                                                    {user.id.toString().substring(10, 20)}
+                                                </td>
+                                                <td className="p-3 text-gray-100">{user.name}</td>
+                                                <td className="p-3 text-gray-400">{user.email}</td>
+                                                <td className="p-3 text-gray-400">{user.joinDate}</td>
+                                                <td className="p-3">
+                                                    <span
+                                                        className={`inline-flex px-3 py-1 rounded-full text-sm font-semibold capitalize
+                        ${user.status === "converted"
+                                                                ? "bg-green-500/20 text-green-300 border border-green-400/30"
+                                                                : user.status === "pending"
+                                                                    ? "bg-yellow-500/20 text-yellow-300 border border-yellow-400/30"
+                                                                    : "bg-gray-500/20 text-gray-300 border border-gray-400/30"
+                                                            }`}
+                                                    >
+                                                        {user.status}
+                                                    </span>
+                                                </td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            {users.map((user) => (
-                                                <tr
-                                                    onClick={() => setSelectedUser(user)}
-                                                    key={user.id}
-                                                    className="hover:bg-gray-50 cursor-pointer transition"
-                                                >
-                                                    <td className="p-3">{user.id.toString().substring(0, 5)}</td>
-                                                    <td className="p-3">{user.name}</td>
-                                                    <td className="p-3">{user.email}</td>
-                                                    <td className="p-3">{user.joinDate}</td>
-                                                    <td className="p-3 rounded-md font-medium text-left">
-                                                        <span
-                                                            className={`inline-flex px-3 py-1 rounded-full text-sm font-semibold capitalize
-                                                                        ${user.status === "converted"
-                                                                    ? "bg-green-100 text-green-700 border border-green-200"
-                                                                    : user.status === "pending"
-                                                                        ? "bg-yellow-100 text-yellow-700 border border-yellow-200"
-                                                                        : "bg-gray-100 text-gray-600 border border-gray-200"
-                                                                }`}
-                                                        >
-                                                            {user.status}
-                                                        </span>
-                                                    </td>
-
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
+                                        ))}
+                                    </tbody>
+                                </table>
                             )}
                         </div>
                     </div>
 
-                    <div className="relative my-10 text-center p-1">
-                        <hr className="absolute left-0 top-1/2 w-full border-gray-200 z-10" />
+                    <div className="relative my-10 text-center">
+                        <hr className="border-gray-600/30" />
                     </div>
 
-                    <div className="bg-white p-3">
-                        <h3 className="text-[16px] font-semibold text-gray-800 mb-6 pb-3">
+                    <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-md border border-white/10 hover:shadow-blue-500/20 transition-all">
+                        <h3 className="text-lg font-semibold text-blue-200 mb-4">
                             Referred User Information
                         </h3>
 
                         {selectedUser ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                {/* Left Column */}
                                 <div className="space-y-5">
                                     <div>
-                                        <h2 className="text-sm font-medium text-gray-500">Name</h2>
-                                        <p className="text-lg font-semibold text-gray-800">{selectedUser.name}</p>
+                                        <h2 className="text-sm font-medium text-gray-400">Name</h2>
+                                        <p className="text-lg font-semibold text-white">{selectedUser.name}</p>
                                     </div>
                                     <div>
-                                        <h2 className="text-sm font-medium text-gray-500">ID</h2>
-                                        <p className="text-lg font-semibold text-gray-800">{selectedUser.id}</p>
+                                        <h2 className="text-sm font-medium text-gray-400">ID</h2>
+                                        <p className="text-lg font-semibold text-white">{selectedUser.id}</p>
                                     </div>
                                     <div>
-                                        <h2 className="text-sm font-medium text-gray-500">Email</h2>
-                                        <p className="text-lg font-semibold text-gray-800">{selectedUser.email}</p>
+                                        <h2 className="text-sm font-medium text-gray-400">Email</h2>
+                                        <p className="text-lg font-semibold text-white">{selectedUser.email}</p>
                                     </div>
                                 </div>
 
-                                {/* Right Column */}
                                 <div className="space-y-5">
                                     <div>
-                                        <h2 className="text-sm font-medium text-gray-500">Account Status</h2>
+                                        <h2 className="text-sm font-medium text-gray-400">Account Status</h2>
                                         <p
-                                            className={`text-lg flex items-center gap-2 font-semibold ${selectedUser.status === "converted" ? "text-green-600" : "text-yellow-600"
+                                            className={`text-lg flex items-center gap-2 font-semibold ${selectedUser.status === "converted"
+                                                ? "text-green-400"
+                                                : "text-yellow-300"
                                                 }`}
                                         >
                                             {selectedUser.status === "converted"
@@ -268,20 +281,23 @@ export default function Referral() {
                                     </div>
 
                                     <div>
-                                        <h2 className="text-sm font-medium text-gray-500 mb-2">Send Message</h2>
+                                        <h2 className="text-sm font-medium text-gray-400 mb-2">
+                                            Send Message
+                                        </h2>
                                         <textarea
                                             placeholder="Add notes about this user..."
-                                            className="w-full min-h-[180px] border border-gray-200 rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                            className="w-full min-h-[160px] bg-[#1b1f3b] border border-blue-400/30 rounded-lg p-3 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                                         ></textarea>
                                     </div>
                                 </div>
                             </div>
                         ) : (
-                            <p className="text-gray-500">Click on a user to view details.</p>
+                            <p className="text-gray-400">Click on a user to view details.</p>
                         )}
                     </div>
                 </div>
             </div>
         </div>
+
     );
 }

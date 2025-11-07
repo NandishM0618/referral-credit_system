@@ -30,10 +30,8 @@ connectDB();
 const onlineUsers = new Map<string, string>();
 
 io.on("connection", (socket) => {
-    console.log("User connected", socket.id);
 
     socket.on("register", (userId: string) => {
-        console.log(`✅ Registered user ${userId} -> ${socket.id}`);
         onlineUsers.set(userId, socket.id);
     });
 
