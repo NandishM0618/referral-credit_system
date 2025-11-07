@@ -8,6 +8,7 @@
     "module": "commonjs",
     "target": "es2020",
     "types": ["node"],
+    "typeRoots": ["./node_modules/@types"],
     "lib": ["esnext"],
     "moduleResolution": "node",
 
