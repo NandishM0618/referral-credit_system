@@ -44,3 +44,27 @@ export const getDashboardStats = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Failed to fetch dashboard data' })
     }
 }
+
+export const getReferredUsers = async (req: Request, res: Response) => {
+    try {
+        const userId = (req as any).user?._id;
+        if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+        const referredUsers = await Referral.find({ referrer: userId })
+            .sort({ createdAt: -1 })
+            .populate("referredUser", "name email");
+
+        const formattedUsers = referredUsers.map((u: any) => ({
+            id: u._id,
+            name: u.referredUser?.name ?? "Unknown",
+            email: u.referredUser?.email ?? "N/A",
+            joinDate: u.createdAt ? new Date(u.createdAt).toISOString().split("T")[0] : "",
+            status: u.status ?? "Pending",
+        }));
+
+        res.json({ users: formattedUsers });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Failed to fetch referred users" });
+    }
+};

@@ -4,9 +4,20 @@ import { useEffect, useState } from "react";
 import { useUserStore } from "../store/userStore";
 import { motion, AnimatePresence } from "framer-motion";
 
+type ReferredUser = {
+    id: number;
+    name: string;
+    email: string;
+    joinDate: string;
+    status: string;
+};
+
 export default function Referral() {
     const [referralLink, setReferralLink] = useState<string>("");
     const [data, setData] = useState<any>(null)
+    const [users, setUsers] = useState<ReferredUser[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [selectedUser, setSelectedUser] = useState<ReferredUser | null>(null);
     const [showCopied, setShowCopied] = useState(false);
     const { token } = useUserStore();
 
@@ -33,6 +44,22 @@ export default function Referral() {
         }
     }
 
+    async function getReferredUsers() {
+        try {
+            const res = await API.get("/referral/users", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setUsers(res.data.users || []);
+        } catch (error) {
+            console.error("Failed to fetch referred users:", error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+
     const handleReferralLink = () => {
         if (!referralLink) return alert("No referral link available!");
         navigator.clipboard.writeText(referralLink);
@@ -42,7 +69,8 @@ export default function Referral() {
 
     useEffect(() => {
         getReferralLink();
-        getStats()
+        getStats();
+        getReferredUsers();
     }, []);
 
     return (
@@ -147,33 +175,49 @@ export default function Referral() {
                     <div className="bg-white p-3">
                         <h3 className="text-lg font-semibold mb-4">Referred Users</h3>
                         <div className="overflow-x-auto">
-                            <table className="w-full text-sm text-left border-collapse">
-                                <thead>
-                                    <tr className="bg-gray-50">
-                                        <th className="p-3 ">ID</th>
-                                        <th className="p-3">Name</th>
-                                        <th className="p-3">Email</th>
-                                        <th className="p-3">Join Date</th>
-                                        <th className="p-3">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr className="hover:bg-gray-50 cursor-pointer">
-                                        <td className="p-3">1</td>
-                                        <td className="p-3">Jane Doe</td>
-                                        <td className="p-3">jane@example.com</td>
-                                        <td className="p-3">2025-10-02</td>
-                                        <td className="p-3 text-green-600 font-medium">Converted</td>
-                                    </tr>
-                                    <tr className="hover:bg-gray-50 cursor-pointer">
-                                        <td className="p-3">2</td>
-                                        <td className="p-3">John Smith</td>
-                                        <td className="p-3">john@example.com</td>
-                                        <td className="p-3">2025-10-06</td>
-                                        <td className="p-3 text-yellow-600 font-medium">Pending</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            {loading ? (
+                                <p className="text-gray-500 text-sm p-4">Loading referred users...</p>
+                            ) : users.length === 0 ? (
+                                <p className="text-gray-500 text-sm p-4">No referred users found.</p>
+                            ) : (
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-sm text-left border-collapse">
+                                        <thead>
+                                            <tr className="bg-gray-50">
+                                                <th className="p-3">ID</th>
+                                                <th className="p-3">Name</th>
+                                                <th className="p-3">Email</th>
+                                                <th className="p-3">Join Date</th>
+                                                <th className="p-3">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {users.map((user) => (
+                                                <tr
+                                                    onClick={() => setSelectedUser(user)}
+                                                    key={user.id}
+                                                    className="hover:bg-gray-50 cursor-pointer transition"
+                                                >
+                                                    <td className="p-3">{user.id.toString().substring(0, 5)}</td>
+                                                    <td className="p-3">{user.name}</td>
+                                                    <td className="p-3">{user.email}</td>
+                                                    <td className="p-3">{user.joinDate}</td>
+                                                    <td
+                                                        className={`p-3 font-medium ${user.status === "Converted"
+                                                            ? "text-green-600"
+                                                            : user.status === "Pending"
+                                                                ? "text-yellow-600"
+                                                                : "text-gray-500"
+                                                            }`}
+                                                    >
+                                                        {user.status}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -186,43 +230,51 @@ export default function Referral() {
                             Referred User Information
                         </h3>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {/* Left Column */}
-                            <div className="space-y-5">
-                                <div>
-                                    <h2 className="text-sm font-medium text-gray-500">Name</h2>
-                                    <p className="text-lg font-semibold text-gray-800">John Doe</p>
-                                </div>
-                                <div>
-                                    <h2 className="text-sm font-medium text-gray-500">ID</h2>
-                                    <p className="text-lg font-semibold text-gray-800">345321</p>
-                                </div>
-                                <div>
-                                    <h2 className="text-sm font-medium text-gray-500">Email</h2>
-                                    <p className="text-lg font-semibold text-gray-800">john@mail.com</p>
-                                </div>
-                            </div>
-
-                            {/* Right Column */}
-                            <div className="space-y-5">
-                                <div>
-                                    <h2 className="text-sm font-medium text-gray-500">Account Status</h2>
-                                    <p className="text-lg flex gap-2 font-semibold text-green-600">
-                                        Successfully Verified <Verified />
-                                    </p>
+                        {selectedUser ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                {/* Left Column */}
+                                <div className="space-y-5">
+                                    <div>
+                                        <h2 className="text-sm font-medium text-gray-500">Name</h2>
+                                        <p className="text-lg font-semibold text-gray-800">{selectedUser.name}</p>
+                                    </div>
+                                    <div>
+                                        <h2 className="text-sm font-medium text-gray-500">ID</h2>
+                                        <p className="text-lg font-semibold text-gray-800">{selectedUser.id}</p>
+                                    </div>
+                                    <div>
+                                        <h2 className="text-sm font-medium text-gray-500">Email</h2>
+                                        <p className="text-lg font-semibold text-gray-800">{selectedUser.email}</p>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <h2 className="text-sm font-medium text-gray-500 mb-2">
-                                        send message
-                                    </h2>
-                                    <textarea
-                                        placeholder="Add notes about this user..."
-                                        className="w-full min-h-[180px] border border-gray-200 rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                                    ></textarea>
+                                {/* Right Column */}
+                                <div className="space-y-5">
+                                    <div>
+                                        <h2 className="text-sm font-medium text-gray-500">Account Status</h2>
+                                        <p
+                                            className={`text-lg flex items-center gap-2 font-semibold ${selectedUser.status === "Converted" ? "text-green-600" : "text-yellow-600"
+                                                }`}
+                                        >
+                                            {selectedUser.status === "Converted"
+                                                ? "Successfully Verified"
+                                                : selectedUser.status}
+                                            {selectedUser.status === "Converted" && <Verified />}
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <h2 className="text-sm font-medium text-gray-500 mb-2">Send Message</h2>
+                                        <textarea
+                                            placeholder="Add notes about this user..."
+                                            className="w-full min-h-[180px] border border-gray-200 rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                        ></textarea>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        ) : (
+                            <p className="text-gray-500">Click on a user to view details.</p>
+                        )}
                     </div>
                 </div>
             </div>
