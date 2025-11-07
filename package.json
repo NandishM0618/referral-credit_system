@@ -5,6 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn --transpile-only src/backend/index.ts",
+    "build":"tsc",
     "start": "node src/backend/index.ts"
   },
   "keywords": [],
