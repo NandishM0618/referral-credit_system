@@ -113,7 +113,7 @@ export default function Referral() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 20 }}
                                 transition={{ duration: 0.3 }}
-                                className="fixed bottom-6 flex items-center bg-blue-600 text-white text-sm px-6 py-3 rounded-lg shadow-lg"
+                                className="fixed bottom-6 flex items-center z-20 bg-blue-600 text-white text-sm px-6 py-3 rounded-lg shadow-lg"
                             >
                                 🌟 Referral link copied to clipboard!
                             </motion.div>
