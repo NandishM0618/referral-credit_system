@@ -160,8 +160,8 @@ All Axios requests automatically attach JWT from store.
 
 ## 📦 Deployment
 
-* **Frontend** → [Vercel](https://vercel.com)
-* **Backend** → [Render](https://render.com)
+* **Frontend** → [Vercel](https://referral-credit-system-omega.vercel.app/)
+* **Backend** → [Render](https://referral-creditsystem-production.up.railway.app/)
 
 Set the same environment variables on the hosting platforms.
 
@@ -169,9 +169,23 @@ Set the same environment variables on the hosting platforms.
 
 ## 🎥 Deliverables
 
-* **Live Demo URL:** [https://yourapp.vercel.app](https://yourapp.vercel.app)
+* **Live Demo URL:** [link](https://referral-creditsystem-production.up.railway.app/)
 
 ---
+
+## ScreenShots 
+
+1. Dashboard
+
+<img width="1915" height="943" alt="Screenshot 2025-11-07 201407" src="https://github.com/user-attachments/assets/d4f5ad89-c449-421a-96af-40aa54ab7f44" />
+
+2. Notification of Credited points
+
+<img width="1917" height="951" alt="Screenshot 2025-11-07 201737" src="https://github.com/user-attachments/assets/f7748f4b-7c43-4439-9c2e-50ea5612f337" />
+
+3. Sample Products
+
+<img width="1919" height="948" alt="Screenshot 2025-11-07 201426" src="https://github.com/user-attachments/assets/7fe70456-a282-4efb-8c94-504663cb6335" />
 
 ---
 
