@@ -1,3 +1,4 @@
+'use client'
 import API from "@/services/apiService";
 import { CheckCircle, Files, Share2, Star, Users, Verified } from "lucide-react";
 import { useEffect, useState } from "react";
