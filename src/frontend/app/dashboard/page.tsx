@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useUserStore } from "../store/userStore";
 import { useRouter } from "next/navigation";
 import API from "@/services/apiService";
+import SideBar from "../components/Sidebar";
+import Referral from "../components/Referral";
 
 export default function Dashboard() {
     const [data, setData] = useState<any>(null);
@@ -41,13 +43,9 @@ export default function Dashboard() {
     if (loading) return <p>Loading...</p>;
 
     return (
-        <div>
-            <h1>Dashboard</h1>
-            {data ? (
-                <pre>{JSON.stringify(data, null, 2)}</pre>
-            ) : (
-                <p>No data available</p>
-            )}
+        <div className="flex">
+            <SideBar />
+            <Referral />
         </div>
     );
 }
